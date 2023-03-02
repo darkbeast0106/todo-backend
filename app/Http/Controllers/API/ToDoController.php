@@ -29,6 +29,7 @@ class ToDoController extends Controller
     public function store(StoreToDoRequest $request)
     {
         $toDo = new ToDo($request->all());
+        $toDo->user_id = $request->user()->id;
         $toDo->save();
         return response($toDo, 201);
     }
@@ -45,6 +46,7 @@ class ToDoController extends Controller
         if (is_null($toDo)) {
             return response(["message" => "A megadott azonosítóval nem található teendő"], 404);
         }
+        $this->authorize("view", $toDo);
         return response($toDo);
     }
 
@@ -61,6 +63,7 @@ class ToDoController extends Controller
         if (is_null($toDo)) {
             return response(["message" => "A megadott azonosítóval nem található teendő"], 404);
         }
+        $this->authorize("update", $toDo);
         $toDo->fill($request->all());
         $toDo->save();
         return response($toDo);
@@ -78,6 +81,7 @@ class ToDoController extends Controller
         if (is_null($toDo)) {
             return response(["message" => "A megadott azonosítóval nem található teendő"], 404);
         }
+        $this->authorize("delete", $toDo);
         $toDo->delete();
         return response()->noContent();
     }

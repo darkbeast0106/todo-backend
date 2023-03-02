@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreToDoRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,12 +24,10 @@ class StoreToDoRequest extends FormRequest
     public function rules()
     {
         return [
-            "title" => ["required","string","max:255",
-                Rule::unique('to_dos')->where(function ($query) {
-                    return $query->where('title', $this->title)
-                    ->where('user_id', $this->user()->id);
-                })],
-            "done" => "boolean",
+            "name" => "required",
+            "email" => "required|email|unique:users,email",
+            "password" => "required",
+            "confirm_password" => "required|same:password",
         ];
     }
 }

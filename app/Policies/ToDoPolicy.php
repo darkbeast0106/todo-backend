@@ -18,7 +18,7 @@ class ToDoPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -30,7 +30,7 @@ class ToDoPolicy
      */
     public function view(User $user, ToDo $toDo)
     {
-        //
+        return $toDo->user_id == $user->id;
     }
 
     /**
@@ -41,7 +41,7 @@ class ToDoPolicy
      */
     public function create(User $user)
     {
-        //
+        return true;
     }
 
     /**
@@ -53,7 +53,7 @@ class ToDoPolicy
      */
     public function update(User $user, ToDo $toDo)
     {
-        //
+        return $toDo->user_id == $user->id;
     }
 
     /**
@@ -65,7 +65,7 @@ class ToDoPolicy
      */
     public function delete(User $user, ToDo $toDo)
     {
-        //
+        return $toDo->user_id == $user->id;
     }
 
     /**
@@ -77,7 +77,7 @@ class ToDoPolicy
      */
     public function restore(User $user, ToDo $toDo)
     {
-        //
+        return $toDo->user_id == $user->id;
     }
 
     /**
@@ -89,6 +89,6 @@ class ToDoPolicy
      */
     public function forceDelete(User $user, ToDo $toDo)
     {
-        //
+        return $toDo->user_id == $user->id;
     }
 }
