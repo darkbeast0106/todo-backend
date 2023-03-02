@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource("/todo", ToDoController::class);
+Route::middleware('auth:sanctum')->apiResource("/todo", ToDoController::class);
 Route::post("register", [UserController::class, "register"]);
 Route::post("login", [UserController::class, "login"]);

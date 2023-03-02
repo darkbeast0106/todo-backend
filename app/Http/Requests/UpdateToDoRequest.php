@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateToDoRequest extends FormRequest
 {
@@ -24,8 +25,12 @@ class UpdateToDoRequest extends FormRequest
     public function rules()
     {
         return [
-            "user_id" => "nullable|integer|exists:users,id",
-            "title" => "string|max:255|unique:to_dos,title,".$this->segment(3),
+            "title" => ["required","string","max:255",
+                Rule::unique("to_dos")->where(function ($query) {
+                    return $query->whereNot("id", $this->segment(3))->where('title', $this->title)
+                        ->where('user_id', $this->user()->id);
+                })
+            ],
             "done" => "boolean",
         ];
     }

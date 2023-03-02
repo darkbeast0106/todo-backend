@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreToDoRequest extends FormRequest
 {
@@ -24,8 +25,12 @@ class StoreToDoRequest extends FormRequest
     public function rules()
     {
         return [
-            "user_id" => "nullable|integer|exists:users,id",
-            "title" => "required|string|max:255|unique:to_dos,title",
+            "title" => ["required","string","max:255",
+                Rule::unique("to_dos")->where(function ($query) {
+                    return $query->where('title', $this->title)
+                        ->where('user_id', $this->user()->id);
+                })
+            ],
             "done" => "boolean",
         ];
     }

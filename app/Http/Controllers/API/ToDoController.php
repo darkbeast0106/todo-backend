@@ -7,6 +7,7 @@ use App\Http\Requests\StoreToDoRequest;
 use App\Http\Requests\UpdateToDoRequest;
 use App\Models\ToDo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ToDoController extends Controller
 {
@@ -17,7 +18,9 @@ class ToDoController extends Controller
      */
     public function index()
     {
-        return response(ToDo::all());
+        $user = Auth::user();
+        $toDos = ToDo::where("user_id", $user->id)->get();
+        return response($toDos);
     }
 
     /**
@@ -29,6 +32,8 @@ class ToDoController extends Controller
     public function store(StoreToDoRequest $request)
     {
         $toDo = new ToDo($request->all());
+        $user = Auth::user();
+        $toDo->user_id = $user->id;
         $toDo->save();
         return response($toDo, 201);
     }
@@ -45,6 +50,7 @@ class ToDoController extends Controller
         if (is_null($toDo)) {
             return response(["message" => "A megadott azonosítóval nem található teendő"], 404);
         }
+        $this->authorize("view", $toDo);
         return response($toDo);
     }
 
@@ -61,6 +67,7 @@ class ToDoController extends Controller
         if (is_null($toDo)) {
             return response(["message" => "A megadott azonosítóval nem található teendő"], 404);
         }
+        $this->authorize("update", $toDo);
         $toDo->fill($request->all());
         $toDo->save();
         return response($toDo);
@@ -78,6 +85,7 @@ class ToDoController extends Controller
         if (is_null($toDo)) {
             return response(["message" => "A megadott azonosítóval nem található teendő"], 404);
         }
+        $this->authorize("forceDelete", $toDo);
         $toDo->delete();
         return response()->noContent();
     }
