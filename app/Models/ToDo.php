@@ -14,4 +14,8 @@ class ToDo extends Model
         "title",
         "done",
     ];
+
+    protected $casts = [
+        "done" => "bool"
+    ];
 }
