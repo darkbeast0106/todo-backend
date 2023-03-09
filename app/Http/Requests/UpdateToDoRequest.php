@@ -25,7 +25,7 @@ class UpdateToDoRequest extends FormRequest
     public function rules()
     {
         return [
-            "title" => ["required","string","max:255",
+            "title" => ["string","max:255",
                 Rule::unique("to_dos")->where(function ($query) {
                     return $query->whereNot("id", $this->segment(3))->where('title', $this->title)
                         ->where('user_id', $this->user()->id);
